@@ -1,0 +1,19 @@
+--This script fetches the backup details for the database named 'SampleDB'. You can replace 'SampleDB' with any other database name you want to query.
+
+SELECT 
+    s.database_name,
+    CASE s.[type]
+        WHEN 'D' THEN 'Full'
+        WHEN 'I' THEN 'Differential'
+        WHEN 'L' THEN 'Transaction Log'
+    END AS BackupType,
+    s.first_lsn,
+    s.last_lsn,
+    s.database_backup_lsn,
+    s.checkpoint_lsn,
+    s.recovery_model,
+    s.is_copy_only
+FROM msdb.dbo.backupset s
+INNER JOIN msdb.dbo.backupmediafamily m ON s.media_set_id = m.media_set_id
+WHERE s.database_name = 'SampleDB'
+GO
